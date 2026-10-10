@@ -907,89 +907,75 @@ const CONFIG = {
 };
 
 /* =====================================================================
-   DATA  (mirrors the three spreadsheet tabs)
-   Everything below is TEST DATA for styling. Nothing here is verified.
+   DATA
+   The data lives in three CSV files beside this page, one per spreadsheet
+   tab. Edit those files, not this one. README.md lists the columns.
    ===================================================================== */
-const SPECIES = [
-  { id: "douc",      common: "Red-shanked douc",              sci: "Pygathrix nemaeus",           group: "Mammals", status: "CR", blurb: "A leaf-eating monkey from the forests of Vietnam, Laos and Cambodia." },
-  { id: "proboscis", common: "Proboscis monkey",              sci: "Nasalis larvatus",            group: "Mammals", status: "EN", blurb: "Found only on Borneo, in mangroves and riverside forest." },
-  { id: "pangolin",  common: "Chinese pangolin",              sci: "Manis pentadactyla",          group: "Mammals", status: "CR", blurb: "Among the most heavily trafficked mammals in the world." },
-  { id: "nwrhino",   common: "Northern white rhino",          sci: "Ceratotherium simum cottoni", group: "Mammals", status: "CR", subspecies: true, blurb: "Functionally extinct. The last known animals are two females." },
-  { id: "grauer",    common: "Grauer's gorilla",              sci: "Gorilla beringei graueri",    group: "Mammals", status: "CR", subspecies: true, blurb: "The largest gorilla, found only in eastern DR Congo." },
-  { id: "aleopard",  common: "Arabian leopard",               sci: "Panthera pardus nimr",        group: "Mammals", status: "CR", subspecies: true, blurb: "The smallest leopard, surviving in scattered mountain ranges of the Arabian Peninsula." },
-  { id: "numbat",    common: "Numbat",                        sci: "Myrmecobius fasciatus",       group: "Mammals", status: "EN", blurb: "A termite-eating marsupial from south-western Australia, active by day." },
-  { id: "leadbeater",common: "Leadbeater's possum",           sci: "Gymnobelideus leadbeateri",   group: "Mammals", status: "CR", blurb: "Restricted to a small area of mountain ash forest in Victoria." },
-  { id: "spix",      common: "Spix's macaw",                  sci: "Cyanopsitta spixii",          group: "Birds",   status: "EW", blurb: "Disappeared from the wild in 2000. Reintroduction in Brazil began in 2022." },
-  { id: "lear",      common: "Lear's macaw",                  sci: "Anodorhynchus leari",         group: "Birds",   status: "EN", blurb: "Nests in sandstone cliffs in one small part of Bahia, Brazil." },
-  { id: "pheagle",   common: "Philippine eagle",              sci: "Pithecophaga jefferyi",       group: "Birds",   status: "CR", blurb: "One of the largest eagles, found on four Philippine islands." },
-  { id: "condor",    common: "California condor",             sci: "Gymnogyps californianus",     group: "Birds",   status: "CR", blurb: "Reduced to 27 birds in 1987, all taken into captivity for breeding." },
-  { id: "maleo",     common: "Maleo",                         sci: "Macrocephalon maleo",         group: "Birds",   status: "CR", blurb: "A Sulawesi bird that buries its eggs in warm sand and volcanic soil." },
-  { id: "magpie",    common: "Javan green magpie",            sci: "Cissa thalassina",            group: "Birds",   status: "CR", blurb: "Trapped for the cage-bird trade to the edge of extinction." },
-  { id: "obp",       common: "Orange-bellied parrot",         sci: "Neophema chrysogaster",       group: "Birds",   status: "CR", blurb: "Migrates between Tasmania and the Australian mainland every year." },
-  { id: "kihansi",   common: "Kihansi spray toad",            sci: "Nectophrynoides asperginis",  group: "Reptiles and amphibians", status: "EW", blurb: "Lived only in the spray zone of a single Tanzanian waterfall." },
-  { id: "swamp",     common: "Western swamp turtle",          sci: "Pseudemydura umbrina",        group: "Reptiles and amphibians", status: "CR", blurb: "Known from a few seasonal swamps near Perth." },
-  { id: "mchicken",  common: "Mountain chicken frog",         sci: "Leptodactylus fallax",        group: "Reptiles and amphibians", status: "CR", blurb: "A giant frog from Dominica and Montserrat, devastated by chytrid fungus." },
-  { id: "wshark",    common: "Whale shark",                   sci: "Rhincodon typus",             group: "Fish and invertebrates",  status: "EN", blurb: "The largest fish alive." },
-  { id: "lhisi",     common: "Lord Howe Island stick insect", sci: "Dryococelus australis",       group: "Fish and invertebrates",  status: "CR", blurb: "Thought extinct until it was rediscovered on Ball's Pyramid in 2001." }
-];
+const DATA_FILES = { species: "species.csv", institutions: "institutions.csv", holdings: "holdings.csv" };
 
-const INSTITUTIONS = [
-  { id: "singapore",  name: "Singapore Zoo",               city: "Singapore",      country: "Singapore",      lat: 1.4043,   lon: 103.7930,  type: "Zoo",                accreditation: "WAZA" },
-  { id: "prague",     name: "Prague Zoo",                  city: "Prague",         country: "Czechia",        lat: 50.1169,  lon: 14.4061,   type: "Zoo",                accreditation: "EAZA" },
-  { id: "taipei",     name: "Taipei Zoo",                  city: "Taipei",         country: "Taiwan",         lat: 24.9983,  lon: 121.5810,  type: "Zoo",                accreditation: "" },
-  { id: "bronx",      name: "Bronx Zoo",                   city: "New York",       country: "United States",  lat: 40.8506,  lon: -73.8770,  type: "Zoo",                accreditation: "AZA" },
-  { id: "toledo",     name: "Toledo Zoo",                  city: "Toledo",         country: "United States",  lat: 41.6190,  lon: -83.5810,  type: "Zoo",                accreditation: "AZA" },
-  { id: "perth",      name: "Perth Zoo",                   city: "Perth",          country: "Australia",      lat: -31.9760, lon: 115.8530,  type: "Zoo",                accreditation: "ZAA" },
-  { id: "healesville",name: "Healesville Sanctuary",       city: "Healesville",    country: "Australia",      lat: -37.6820, lon: 145.5310,  type: "Wildlife sanctuary", accreditation: "ZAA" },
-  { id: "melbourne",  name: "Melbourne Zoo",               city: "Melbourne",      country: "Australia",      lat: -37.7840, lon: 144.9510,  type: "Zoo",                accreditation: "ZAA" },
-  { id: "adelaide",   name: "Adelaide Zoo",                city: "Adelaide",       country: "Australia",      lat: -34.9140, lon: 138.6060,  type: "Zoo",                accreditation: "ZAA" },
-  { id: "sandiego",   name: "San Diego Zoo",               city: "San Diego",      country: "United States",  lat: 32.7353,  lon: -117.1490, type: "Zoo",                accreditation: "AZA" },
-  { id: "georgia",    name: "Georgia Aquarium",            city: "Atlanta",        country: "United States",  lat: 33.7634,  lon: -84.3951,  type: "Aquarium",           accreditation: "AZA" },
-  { id: "churaumi",   name: "Okinawa Churaumi Aquarium",   city: "Motobu",         country: "Japan",          lat: 26.6943,  lon: 127.8779,  type: "Aquarium",           accreditation: "JAZA" },
-  { id: "kaiyukan",   name: "Osaka Aquarium Kaiyukan",     city: "Osaka",          country: "Japan",          lat: 34.6545,  lon: 135.4290,  type: "Aquarium",           accreditation: "JAZA" },
-  { id: "pec",        name: "Philippine Eagle Center",     city: "Davao",          country: "Philippines",    lat: 7.1850,   lon: 125.4150,  type: "Breeding centre",    accreditation: "" },
-  { id: "pairi",      name: "Pairi Daiza",                 city: "Brugelette",     country: "Belgium",        lat: 50.5850,  lon: 3.8870,    type: "Zoo",                accreditation: "EAZA" },
-  { id: "antwerp",    name: "Antwerp Zoo",                 city: "Antwerp",        country: "Belgium",        lat: 51.2170,  lon: 4.4230,    type: "Zoo",                accreditation: "EAZA" },
-  { id: "loro",       name: "Loro Parque",                 city: "Tenerife",       country: "Spain",          lat: 28.4086,  lon: -16.5644,  type: "Zoo",                accreditation: "EAZA" },
-  { id: "chester",    name: "Chester Zoo",                 city: "Chester",        country: "United Kingdom", lat: 53.2270,  lon: -2.8840,   type: "Zoo",                accreditation: "EAZA" },
-  { id: "jersey",     name: "Jersey Zoo",                  city: "Trinity",        country: "Jersey",         lat: 49.2290,  lon: -2.0730,   type: "Zoo",                accreditation: "EAZA" },
-  { id: "olpejeta",   name: "Ol Pejeta Conservancy",       city: "Nanyuki",        country: "Kenya",          lat: 0.0200,   lon: 36.9000,   type: "Conservancy",        accreditation: "" },
-  { id: "sharjah",    name: "Arabia's Wildlife Centre",    city: "Sharjah",        country: "United Arab Emirates", lat: 25.2850, lon: 55.6950, type: "Zoo",             accreditation: "" }
-];
+// Turns CSV text into a list of rows, each keyed by the column headings.
+function parseCSV(text) {
+  const rows = [];
+  let row = [], cell = "", quoted = false;
+  text = text.replace(/^﻿/, "");
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (quoted) {
+      if (c === '"' && text[i + 1] === '"') { cell += '"'; i++; }
+      else if (c === '"') quoted = false;
+      else cell += c;
+    } else if (c === '"') quoted = true;
+    else if (c === ",") { row.push(cell); cell = ""; }
+    else if (c === "\n" || c === "\r") {
+      if (c === "\r" && text[i + 1] === "\n") i++;
+      row.push(cell); rows.push(row); row = []; cell = "";
+    } else cell += c;
+  }
+  if (cell !== "" || row.length) { row.push(cell); rows.push(row); }
+  const head = (rows.shift() || []).map((h) => h.trim().toLowerCase());
+  return rows
+    .filter((r) => r.some((v) => v.trim() !== ""))
+    .map((r) => Object.fromEntries(head.map((h, i) => [h, (r[i] || "").trim()])));
+}
 
-// One row per species-place pair. onDisplay and lastVerified are placeholders.
-const HOLDINGS = [
-  { species: "douc",       place: "singapore",   onDisplay: true,  lastVerified: "2026-09-14", source: "" },
-  { species: "proboscis",  place: "singapore",   onDisplay: true,  lastVerified: "2026-09-14", source: "" },
-  { species: "pangolin",   place: "prague",      onDisplay: true,  lastVerified: "2026-06-02", source: "" },
-  { species: "pangolin",   place: "taipei",      onDisplay: true,  lastVerified: "2025-05-20", source: "" },
-  { species: "lear",       place: "prague",      onDisplay: true,  lastVerified: "2026-06-02", source: "" },
-  { species: "lear",       place: "loro",        onDisplay: true,  lastVerified: null,         source: "" },
-  { species: "magpie",     place: "prague",      onDisplay: true,  lastVerified: "2026-06-02", source: "" },
-  { species: "magpie",     place: "chester",     onDisplay: true,  lastVerified: "2026-08-11", source: "" },
-  { species: "mchicken",   place: "chester",     onDisplay: false, lastVerified: "2026-08-11", source: "" },
-  { species: "mchicken",   place: "jersey",      onDisplay: true,  lastVerified: "2025-03-04", source: "" },
-  { species: "kihansi",    place: "bronx",       onDisplay: true,  lastVerified: "2026-07-22", source: "" },
-  { species: "kihansi",    place: "toledo",      onDisplay: true,  lastVerified: null,         source: "" },
-  { species: "maleo",      place: "bronx",       onDisplay: true,  lastVerified: "2026-07-22", source: "" },
-  { species: "numbat",     place: "perth",       onDisplay: true,  lastVerified: "2026-09-30", source: "" },
-  { species: "swamp",      place: "perth",       onDisplay: true,  lastVerified: "2026-09-30", source: "" },
-  { species: "swamp",      place: "adelaide",    onDisplay: true,  lastVerified: "2025-07-15", source: "" },
-  { species: "leadbeater", place: "healesville", onDisplay: true,  lastVerified: "2026-04-18", source: "" },
-  { species: "obp",        place: "healesville", onDisplay: false, lastVerified: "2026-04-18", source: "" },
-  { species: "obp",        place: "adelaide",    onDisplay: true,  lastVerified: "2025-07-15", source: "" },
-  { species: "lhisi",      place: "melbourne",   onDisplay: true,  lastVerified: "2026-05-09", source: "" },
-  { species: "lhisi",      place: "sandiego",    onDisplay: true,  lastVerified: null,         source: "" },
-  { species: "condor",     place: "sandiego",    onDisplay: true,  lastVerified: "2026-02-27", source: "" },
-  { species: "wshark",     place: "georgia",     onDisplay: true,  lastVerified: "2026-08-01", source: "" },
-  { species: "wshark",     place: "churaumi",    onDisplay: true,  lastVerified: "2026-08-01", source: "" },
-  { species: "wshark",     place: "kaiyukan",    onDisplay: true,  lastVerified: null,         source: "" },
-  { species: "pheagle",    place: "pec",         onDisplay: true,  lastVerified: "2026-01-12", source: "" },
-  { species: "spix",       place: "pairi",       onDisplay: true,  lastVerified: "2025-11-03", source: "" },
-  { species: "grauer",     place: "antwerp",     onDisplay: true,  lastVerified: null,         source: "" },
-  { species: "nwrhino",    place: "olpejeta",    onDisplay: true,  lastVerified: "2026-03-19", source: "" },
-  { species: "aleopard",   place: "sharjah",     onDisplay: true,  lastVerified: null,         source: "" }
-];
+async function loadCSV(file) {
+  const res = await fetch(file, { cache: "no-cache" });
+  if (!res.ok) throw new Error(file + " could not be loaded (error " + res.status + ").");
+  return parseCSV(await res.text());
+}
+
+// Loads the three files and leaves out any row the map can't draw, so one bad
+// row can't break the page. validate.py is what reports those rows properly.
+async function loadData() {
+  const [sp, inst, hold] = await Promise.all([
+    loadCSV(DATA_FILES.species), loadCSV(DATA_FILES.institutions), loadCSV(DATA_FILES.holdings)
+  ]);
+  const isYes = (v) => /^(yes|y|true|1)$/i.test(v || "");
+  const num = (v) => (v === "" || v == null ? NaN : Number(v));
+  const firstOnly = (key) => { const seen = new Set(); return (x) => !seen.has(key(x)) && seen.add(key(x)); };
+
+  let species = sp.map((r) => ({
+    id: r.id, common: r.common_name, sci: r.scientific_name || "", group: r.group || "",
+    status: (r.iucn_status || "").toUpperCase(), subspecies: isYes(r.subspecies), blurb: r.blurb || ""
+  })).filter((s) => s.id && s.common && ["EW", "CR", "EN"].includes(s.status)).filter(firstOnly((s) => s.id));
+
+  let institutions = inst.map((r) => ({
+    id: r.id, name: r.name, city: r.city || "", country: r.country || "",
+    lat: num(r.lat), lon: num(r.lon), type: r.type || "Zoo", accreditation: r.accreditation || ""
+  })).filter((p) => p.id && p.name && Math.abs(p.lat) <= 90 && Math.abs(p.lon) <= 180).filter(firstOnly((p) => p.id));
+
+  const spIds = new Set(species.map((s) => s.id)), plIds = new Set(institutions.map((p) => p.id));
+  const holdings = hold.map((r) => ({
+    species: r.species_id, place: r.institution_id, onDisplay: isYes(r.on_display),
+    lastVerified: /^\d{4}-\d{2}-\d{2}$/.test(r.last_verified || "") ? r.last_verified : null,
+    source: /^https?:\/\//i.test(r.source || "") ? r.source : ""
+  })).filter((h) => spIds.has(h.species) && plIds.has(h.place)).filter(firstOnly((h) => h.species + "|" + h.place));
+
+  // A species nobody holds, or a place holding nothing, has nothing to show.
+  species = species.filter((s) => holdings.some((h) => h.species === s.id));
+  institutions = institutions.filter((p) => holdings.some((h) => h.place === p.id));
+  return { species, institutions, holdings };
+}
 
 /* =====================================================================
    BASEMAP (country outlines from Natural Earth, simplified)
@@ -999,6 +985,7 @@ const LAND = {"type":"FeatureCollection","features":[{"type":"Feature","properti
 /* =====================================================================
    APP
    ===================================================================== */
+function startApp(SPECIES, INSTITUTIONS, HOLDINGS) {
 const STATUS = { EW: "Extinct in the Wild", CR: "Critically Endangered", EN: "Endangered" };
 const STATUS_ORDER = { EW: 0, CR: 1, EN: 2 };
 const byId = (arr) => Object.fromEntries(arr.map((x) => [x.id, x]));
@@ -1233,6 +1220,22 @@ $("aboutClose").addEventListener("click", () => $("about").close());
 $("aboutFix").href = "mailto:" + CONFIG.correctionsEmail + "?subject=" + encodeURIComponent("Correction");
 
 render();
+}
+
+loadData()
+  .then((d) => startApp(d.species, d.institutions, d.holdings))
+  .catch((err) => {
+    console.error(err);
+    const box = document.createElement("div");
+    box.className = "empty";
+    const why = location.protocol === "file:"
+      ? "This page reads its data from the CSV files beside it, and browsers block that when the page is opened straight from a folder on your computer. Open the published site instead."
+      : (err && err.message) || "Check that species.csv, institutions.csv and holdings.csv sit beside index.html.";
+    const p1 = document.createElement("p"); p1.textContent = "The data files didn't load.";
+    const p2 = document.createElement("p"); p2.textContent = why;
+    box.append(p1, p2);
+    document.getElementById("view").replaceChildren(box);
+  });
 </script>
 </body>
 </html>

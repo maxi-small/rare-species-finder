@@ -1,0 +1,22 @@
+id,name,city,country,lat,lon,type,accreditation
+singapore,Singapore Zoo,Singapore,Singapore,1.4043,103.793,Zoo,WAZA
+prague,Prague Zoo,Prague,Czechia,50.1169,14.4061,Zoo,EAZA
+taipei,Taipei Zoo,Taipei,Taiwan,24.9983,121.581,Zoo,
+bronx,Bronx Zoo,New York,United States,40.8506,-73.877,Zoo,AZA
+toledo,Toledo Zoo,Toledo,United States,41.619,-83.581,Zoo,AZA
+perth,Perth Zoo,Perth,Australia,-31.976,115.853,Zoo,ZAA
+healesville,Healesville Sanctuary,Healesville,Australia,-37.682,145.531,Wildlife sanctuary,ZAA
+melbourne,Melbourne Zoo,Melbourne,Australia,-37.784,144.951,Zoo,ZAA
+adelaide,Adelaide Zoo,Adelaide,Australia,-34.914,138.606,Zoo,ZAA
+sandiego,San Diego Zoo,San Diego,United States,32.7353,-117.149,Zoo,AZA
+georgia,Georgia Aquarium,Atlanta,United States,33.7634,-84.3951,Aquarium,AZA
+churaumi,Okinawa Churaumi Aquarium,Motobu,Japan,26.6943,127.8779,Aquarium,JAZA
+kaiyukan,Osaka Aquarium Kaiyukan,Osaka,Japan,34.6545,135.429,Aquarium,JAZA
+pec,Philippine Eagle Center,Davao,Philippines,7.185,125.415,Breeding centre,
+pairi,Pairi Daiza,Brugelette,Belgium,50.585,3.887,Zoo,EAZA
+antwerp,Antwerp Zoo,Antwerp,Belgium,51.217,4.423,Zoo,EAZA
+loro,Loro Parque,Tenerife,Spain,28.4086,-16.5644,Zoo,EAZA
+chester,Chester Zoo,Chester,United Kingdom,53.227,-2.884,Zoo,EAZA
+jersey,Jersey Zoo,Trinity,Jersey,49.229,-2.073,Zoo,EAZA
+olpejeta,Ol Pejeta Conservancy,Nanyuki,Kenya,0.02,36.9,Conservancy,
+sharjah,Arabia's Wildlife Centre,Sharjah,United Arab Emirates,25.285,55.695,Zoo,
