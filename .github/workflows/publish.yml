@@ -1,0 +1,40 @@
+# Runs the data check every time a file in the project changes.
+# The website is only updated if the check passes.
+name: Check data and publish site
+
+on:
+  push:
+    branches: [main]
+  # Adds a "Run workflow" button on the Actions tab, to run it by hand.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# If two changes arrive close together, publish them one after the other.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the files
+        uses: actions/checkout@v4
+      - name: Check the data
+        run: python3 validate.py
+      - name: Set up Pages
+        uses: actions/configure-pages@v5
+      - name: Package the site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+      - name: Publish the site
+        id: deployment
+        uses: actions/deploy-pages@v5
