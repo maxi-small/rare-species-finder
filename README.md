@@ -12,16 +12,20 @@ A map of zoos and aquariums that hold threatened species few other places keep.
 | `species.csv` | One row per species. |
 | `institutions.csv` | One row per zoo, aquarium or other place. |
 | `holdings.csv` | One row per species kept at a place. This is the file that changes most. |
+| `fetch_sheet.py` | Copies the data from the Google Sheet into the three CSV files. |
 | `validate.py` | The data check. |
-| `.github/workflows/publish.yml` | Tells GitHub to run the check on every change and publish the site only if it passes. |
+| `.github/workflows/publish.yml` | Tells GitHub to copy the data from the Sheet, run the check, and publish the site only if the check passes. |
 
 ## Editing the data
 
-1. Open a data file on GitHub and click the pencil icon.
-2. Make the change and click **Commit changes**.
-3. Open the **Actions** tab. A green tick means the check passed and the site has been updated. A red cross means the check found an error and the site has been left as it was; click the run to see which row.
+The data is edited in a Google Sheet with three tabs: `species`, `institutions` and `holdings`. The CSV files here are copies of those tabs. **Don't edit the CSV files on GitHub**, because the next run overwrites them with whatever is in the Sheet.
 
-A value that contains a comma needs double quotes around it, for example `"Found only on Borneo, in mangroves and riverside forest."`
+1. Make the change in the Google Sheet.
+2. Wait about five minutes. Google's published copy of a Sheet lags behind edits.
+3. On GitHub, open the **Actions** tab, choose **Check data and publish site** on the left, and click **Run workflow**.
+4. A green tick means the check passed, the CSV files here were updated, and the site has been republished. A red cross means something failed and nothing was changed; click the run to see why.
+
+A new tab in the Sheet isn't published until it is ticked under **File > Share > Publish to web > Published content & settings**.
 
 ## Columns
 
