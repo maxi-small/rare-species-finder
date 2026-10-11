@@ -2,8 +2,6 @@
 
 A map of zoos and aquariums that hold threatened species few other places keep.
 
-**The data in this project is test data. Holdings, dates and display status have not been verified.**
-
 ## What each file is
 
 | File | What it is |
@@ -53,6 +51,7 @@ A holder that fails is still recorded, with `listed` set to `no` and the reason 
 | `iucn_status` | `EN`, `CR` or `EW`. |
 | `subspecies` | `yes` or `no`. |
 | `blurb` | One or two sentences. May be empty. |
+| `note` | A short piece of advice shown on the species page, such as a reason to check before visiting. May be empty. |
 | `holder_list_complete` | `yes` or `no`. When `no`, the species page says it may be held elsewhere too. May be empty. |
 
 ### institutions.csv
