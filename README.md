@@ -27,6 +27,19 @@ The data is edited in a Google Sheet with three tabs: `species`, `institutions` 
 
 A new tab in the Sheet isn't published until it is ticked under **File > Share > Publish to web > Published content & settings**.
 
+## What gets included
+
+**Species:** a curated selection of species that are hard to see in zoos and are listed as Endangered, Critically Endangered or Extinct in the Wild on the IUCN Red List. Every known holder is recorded where possible.
+
+**Places** are listed on the site if they meet all four of these:
+
+1. They belong to a recognised zoo association (AZA, EAZA, ZAA, BIAZA, WAZA, CAZA, JAZA, SEAZA, PAAZA, ALPZA, with national bodies case by case), or run an official recovery or rescue programme for the species.
+2. They are open to the public.
+3. They say publicly that they keep the species. That page is the holding's source link.
+4. They treat the species respectfully: no orca shows or circus-style animal acts anywhere at the institution, and the listed species isn't used as a prop.
+
+A holder that fails is still recorded, with `listed` set to `no` and the reason given.
+
 ## Columns
 
 ### species.csv
@@ -40,6 +53,7 @@ A new tab in the Sheet isn't published until it is ticked under **File > Share >
 | `iucn_status` | `EN`, `CR` or `EW`. |
 | `subspecies` | `yes` or `no`. |
 | `blurb` | One or two sentences. May be empty. |
+| `holder_list_complete` | `yes` or `no`. When `no`, the species page says it may be held elsewhere too. May be empty. |
 
 ### institutions.csv
 
@@ -51,6 +65,8 @@ A new tab in the Sheet isn't published until it is ticked under **File > Share >
 | `lon` | Longitude as a decimal number between -180 and 180. East is positive. |
 | `type` | Any text, such as `Zoo`, `Aquarium` or `Breeding centre`. |
 | `accreditation` | Any text, such as `EAZA`. May be empty. |
+| `listed` | `yes` or `no`. A place set to `no` stays in the data but is left off the site; each species it holds says so in one line. Empty counts as `yes`. |
+| `exclusion_reason` | Why the place isn't listed. Required when `listed` is `no`. |
 
 ### holdings.csv
 
@@ -64,8 +80,8 @@ A new tab in the Sheet isn't published until it is ticked under **File > Share >
 
 ## What the check does
 
-**Errors** stop the site being updated: a missing column or required value, a duplicate id, a holding that points at a species or place that doesn't exist, the same holding entered twice, a status or group outside the allowed list, coordinates that aren't numbers or are out of range, a date in the wrong format or in the future, and a source that isn't a web address.
+**Errors** stop the site being updated: a missing column or required value, a duplicate id, a holding that points at a species or place that doesn't exist, the same holding entered twice, a status or group outside the allowed list, coordinates that aren't numbers or are out of range, a date in the wrong format or in the future, a source that isn't a web address, and a place set to not listed with no reason given.
 
-**Warnings** are listed but don't stop anything: holdings never checked or not checked for over a year, holdings with no source, species or places with no holdings, species that are off-show everywhere, and species on display at more than 10 places.
+**Warnings** are listed but don't stop anything: holdings never checked or not checked for over a year, holdings with no source, species or places with no holdings, species that are off-show everywhere, and species whose every holder is set to not listed.
 
 The check can't tell whether a holding is true. It only catches data the site can't use.

@@ -16,7 +16,7 @@ import urllib.error
 import urllib.request
 
 # The "Publish to web" address of the Sheet, up to and including /pub
-PUBLISHED = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSRwW7eyqe0C3ZdansJ_3jdjiNYmXr3ZIlXNwqoi62W832PZ8FEcp8xusyQIX0E8w/pub"
+PUBLISHED = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSczC-wSPWVAHEFbIsZ6hzBCm6ZGVkyqjLypdk_I3yZPuCGFIu66JAx3IE8pnrkPGAAQG6xCrrE1ZaJ/pub"
 
 # File to write -> (the tab's gid number from its published link,
 #                   a heading that tab must have, to catch links that got mixed up)

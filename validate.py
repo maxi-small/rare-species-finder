@@ -19,7 +19,6 @@ from datetime import date
 STATUSES = {"EW", "CR", "EN"}
 GROUPS = {"Mammals", "Birds", "Reptiles and amphibians", "Fish and invertebrates"}
 STALE_AFTER_DAYS = 365   # a holding not re-checked in this long gets a warning
-MAX_HOLDERS = 10         # the inclusion rule: on display at this many places or fewer
 
 REQUIRED = {
     "species.csv": ["id", "common_name", "scientific_name", "group", "iucn_status", "subspecies", "blurb"],
@@ -34,6 +33,7 @@ DATE_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 errors = []    # (file, row, message)
 warnings = []
+unlisted = set()   # ids of institutions marked "listed: no"
 
 
 def error(file, row, message):
@@ -114,6 +114,7 @@ def check_species(rows):
         if r["group"] and r["group"] not in GROUPS:
             error("species.csv", n, f'group is "{r["group"]}" but must be one of: ' + ", ".join(sorted(GROUPS)))
         check_yes_no("species.csv", n, "subspecies", r["subspecies"])
+        check_yes_no("species.csv", n, "holder_list_complete", r.get("holder_list_complete", ""))
         if not r["blurb"]:
             warn("species.csv", n, f'{r["common_name"] or r["id"]} has no blurb')
     return ids
@@ -141,6 +142,16 @@ def check_institutions(rows):
                 error("institutions.csv", n, f"{col} is {r[col]} but must be between -{limit} and {limit}.{hint}")
         if coords.get("lat") == 0 and coords.get("lon") == 0:
             warn("institutions.csv", n, f'{r["name"]} is at 0, 0, which is in the Atlantic. Placeholder coordinates?')
+
+        # Optional columns: a place marked "listed: no" is kept in the data but left off the site.
+        listed, reason = r.get("listed", ""), r.get("exclusion_reason", "")
+        check_yes_no("institutions.csv", n, "listed", listed)
+        if listed.lower() == "no":
+            unlisted.add(r["id"])
+            if not reason:
+                error("institutions.csv", n, f'{r["name"]} has listed set to no, so exclusion_reason must say why')
+        elif reason:
+            warn("institutions.csv", n, f'{r["name"]} has an exclusion_reason but listed is not no, so it still appears on the site')
     return ids
 
 
@@ -161,6 +172,7 @@ def check_holdings(rows, species_ids, institution_ids):
     pairs = {}
     on_show = {}        # species id -> number of places where it is on display
     used_species, used_institutions = set(), set()
+    holders, unlisted_holders = {}, {}   # species id -> number of holders, and how many are not listed
     never_checked, no_source = [], []   # row numbers, reported as one line each
 
     for n, r in rows:
@@ -174,6 +186,9 @@ def check_holdings(rows, species_ids, institution_ids):
         pairs.setdefault((sp, inst), n)
         used_species.add(sp)
         used_institutions.add(inst)
+        holders[sp] = holders.get(sp, 0) + 1
+        if inst in unlisted:
+            unlisted_holders[sp] = unlisted_holders.get(sp, 0) + 1
 
         check_yes_no("holdings.csv", n, "on_display", r["on_display"])
         if r["on_display"].lower() == "yes":
@@ -212,8 +227,8 @@ def check_holdings(rows, species_ids, institution_ids):
             warn("species.csv", n, f"{sp} has no rows in holdings.csv, so it won't appear on the site")
         elif on_show.get(sp, 0) == 0:
             warn("species.csv", n, f"{sp} is off-show everywhere, so nobody can see it")
-        elif on_show[sp] > MAX_HOLDERS:
-            warn("species.csv", n, f"{sp} is on display at {on_show[sp]} places, more than the limit of {MAX_HOLDERS}")
+        elif holders[sp] <= unlisted_holders.get(sp, 0):
+            warn("species.csv", n, f"every holder of {sp} is marked as not listed, so it won't appear on the site")
     for inst, n in institution_ids.items():
         if inst not in used_institutions:
             warn("institutions.csv", n, f"{inst} has no rows in holdings.csv, so it won't appear on the site")

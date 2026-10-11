@@ -883,8 +883,10 @@ dialog a { color: var(--accent); }
 
 <dialog id="about" aria-labelledby="aboutTitle">
   <h2 id="aboutTitle">About the data</h2>
-  <h3>What is included (draft rule)</h3>
-  <p>Species listed as Endangered, Critically Endangered or Extinct in the Wild on the IUCN Red List, on public display at 10 or fewer institutions worldwide. Subspecies are included and marked.</p>
+  <h3>What is included</h3>
+  <p>A curated selection of species that are hard to see in zoos and are listed as Endangered, Critically Endangered or Extinct in the Wild on the IUCN Red List. Subspecies are included and marked.</p>
+  <h3>Which places are listed</h3>
+  <p>A place is listed if it belongs to a recognised zoo association or runs an official recovery programme for the species, is open to the public, and says publicly that it keeps the species. Places that run orca shows or circus-style animal acts are not listed.</p>
   <h3>Check before you travel</h3>
   <p>Animals move, go off-show and die. Every record shows when it was last checked. Confirm with the institution before you plan a trip around one.</p>
   <h3>Corrections</h3>
@@ -951,17 +953,20 @@ async function loadData() {
     loadCSV(DATA_FILES.species), loadCSV(DATA_FILES.institutions), loadCSV(DATA_FILES.holdings)
   ]);
   const isYes = (v) => /^(yes|y|true|1)$/i.test(v || "");
+  const isNo = (v) => /^(no|n|false|0)$/i.test(v || "");
   const num = (v) => (v === "" || v == null ? NaN : Number(v));
   const firstOnly = (key) => { const seen = new Set(); return (x) => !seen.has(key(x)) && seen.add(key(x)); };
 
   let species = sp.map((r) => ({
     id: r.id, common: r.common_name, sci: r.scientific_name || "", group: r.group || "",
-    status: (r.iucn_status || "").toUpperCase(), subspecies: isYes(r.subspecies), blurb: r.blurb || ""
+    status: (r.iucn_status || "").toUpperCase(), subspecies: isYes(r.subspecies), blurb: r.blurb || "",
+    incomplete: isNo(r.holder_list_complete)
   })).filter((s) => s.id && s.common && ["EW", "CR", "EN"].includes(s.status)).filter(firstOnly((s) => s.id));
 
   let institutions = inst.map((r) => ({
     id: r.id, name: r.name, city: r.city || "", country: r.country || "",
-    lat: num(r.lat), lon: num(r.lon), type: r.type || "Zoo", accreditation: r.accreditation || ""
+    lat: num(r.lat), lon: num(r.lon), type: r.type || "Zoo", accreditation: r.accreditation || "",
+    listed: !isNo(r.listed)
   })).filter((p) => p.id && p.name && Math.abs(p.lat) <= 90 && Math.abs(p.lon) <= 180).filter(firstOnly((p) => p.id));
 
   const spIds = new Set(species.map((s) => s.id)), plIds = new Set(institutions.map((p) => p.id));
@@ -971,10 +976,15 @@ async function loadData() {
     source: /^https?:\/\//i.test(r.source || "") ? r.source : ""
   })).filter((h) => spIds.has(h.species) && plIds.has(h.place)).filter(firstOnly((h) => h.species + "|" + h.place));
 
+  // Places marked "listed: no" stay off the site, but each species page says how many there are.
+  const hidden = new Set(institutions.filter((p) => !p.listed).map((p) => p.id));
+  species.forEach((s) => { s.unlisted = holdings.filter((h) => h.species === s.id && hidden.has(h.place)).length; });
+  const shown = holdings.filter((h) => !hidden.has(h.place));
+
   // A species nobody holds, or a place holding nothing, has nothing to show.
-  species = species.filter((s) => holdings.some((h) => h.species === s.id));
-  institutions = institutions.filter((p) => holdings.some((h) => h.place === p.id));
-  return { species, institutions, holdings };
+  species = species.filter((s) => shown.some((h) => h.species === s.id));
+  institutions = institutions.filter((p) => p.listed && shown.some((h) => h.place === p.id));
+  return { species, institutions, holdings: shown };
 }
 
 /* =====================================================================
@@ -1074,6 +1084,9 @@ function fixLine(subject) {
 
 function renderSpecies(s) {
   const hs = holdingsOf(s.id);
+  const notes = [];
+  if (s.unlisted) notes.push("Also held at " + plural(s.unlisted, "institution", "institutions") + " not listed here.");
+  if (s.incomplete) notes.push("It may be held elsewhere too: this list isn't confirmed complete.");
   return '<div class="detail"><button class="back" type="button" data-act="back">Back to the list</button>' +
     '<h2 tabindex="-1" id="dTitle">' + esc(s.common) + '</h2><p class="sci">' + esc(s.sci) + "</p>" +
     '<p class="status"><span class="badge ' + s.status + '">' + s.status + "</span>" + STATUS[s.status] +
@@ -1084,7 +1097,7 @@ function renderSpecies(s) {
       const p = PL[h.place];
       return '<li class="hold"><div class="hold-top"><button class="hold-go" type="button" data-go="place:' + p.id + '">' + esc(p.name) + "</button></div>" +
         '<span class="hold-sub">' + esc(p.city + ", " + p.country) + "</span>" + holdMeta(h) + "</li>";
-    }).join("") + "</ul>" + fixLine(s.common) + "</div>";
+    }).join("") + "</ul>" + (notes.length ? '<p class="fix">' + notes.join(" ") + "</p>" : "") + fixLine(s.common) + "</div>";
 }
 
 function renderPlace(p) {
